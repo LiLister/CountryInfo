@@ -25,4 +25,18 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    //    http
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.9.0'
+
+    // RxJava
+    implementation 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
+
+    // glide
+    implementation 'com.github.bumptech.glide:glide:4.1.1'
+    //    glide okhttp
+    compile 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
+
 }
