@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CountryInfo</string>
+    <string name="main_activity_title">Country Search</string>
+
 </resources>
