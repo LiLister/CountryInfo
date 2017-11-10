@@ -1,5 +1,7 @@
 package com.dream.countryinfo.network;
 
+import com.dream.countryinfo.feature.country.CountryDetail;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,8 +17,11 @@ import rx.Observable;
 
 public interface CountryApi {
 
+    @GET("rest/v2/name/{name}?fullText=true")
+    Call<List<CountryDetail>> getCountriesByName(@Path("name") String name, @Query("fields") String fields);
+
     @GET("rest/v2/name/{name}")
-    Call<List<Map<String, String>>> getCountriesByName(@Path("name") String name, @Query("fields") String fields);
+    Call<List<Map<String, String>>> searchCountriesByName(@Path("name") String name, @Query("fields") String fields);
 
     @GET("rest/v2/all")
     Call<List<Map<String, String>>> getAllCountries(@Query("fields") String fields);

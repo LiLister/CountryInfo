@@ -19,7 +19,7 @@ public class BaseActivity extends AppCompatActivity {
     public boolean isActivityValid() {
         if (this.isFinishing()) {
             return false;
-        } else if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) && activityIsNotDestroyed()) {
+        } else if ((Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN) && activityIsDestroyed()) {
             return false;
         }
 
@@ -27,8 +27,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     @TargetApi(17)
-    private boolean activityIsNotDestroyed() {
-        return !this.isDestroyed();
+    private boolean activityIsDestroyed() {
+        return this.isDestroyed();
     }
 
     protected void hideLoading() {

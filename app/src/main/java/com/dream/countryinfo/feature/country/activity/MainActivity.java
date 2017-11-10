@@ -3,6 +3,9 @@ package com.dream.countryinfo.feature.country.activity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -10,6 +13,7 @@ import android.widget.Toast;
 import com.dream.countryinfo.CountryApp;
 import com.dream.countryinfo.R;
 import com.dream.countryinfo.activity.BaseActivity;
+import com.dream.countryinfo.feature.country.CountryDetail;
 import com.dream.countryinfo.feature.country.adapter.CountryNamesAdapter;
 import com.dream.countryinfo.network.CountryApi;
 import com.google.gson.Gson;
@@ -33,6 +37,8 @@ public class MainActivity extends BaseActivity {
     private ListView listView;
     private CountryNamesAdapter countryNamesAdapter = new CountryNamesAdapter();
 
+    private List<String> countryNamesSearched = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,19 +57,19 @@ public class MainActivity extends BaseActivity {
                 CountryApi countryApi = CountryApp.getApplication().getCountryApi();
 
                 // countryApi.getAllCountries("name");
-                
-                Call<List<Map<String, String>>> call = countryApi.getCountriesByName(s, "name");
+
+                Call<List<Map<String, String>>> call = countryApi.searchCountriesByName(s, "name");
 
                 call.enqueue(new Callback<List<Map<String, String>>>() {
                     @Override
                     public void onResponse(Call<List<Map<String, String>>> call, Response<List<Map<String, String>>> response) {
-                        List<String> names = new ArrayList<>();
+                        countryNamesSearched.clear();
                         for (Map<String, String> item : response.body()) {
 
-                            names.add(item.get("name"));
+                            countryNamesSearched.add(item.get("name"));
                         }
 
-                        countryNamesAdapter.setCountryNames(names);
+                        countryNamesAdapter.setCountryNames(countryNamesSearched);
                         countryNamesAdapter.notifyDataSetChanged();
                     }
 
@@ -124,6 +130,33 @@ public class MainActivity extends BaseActivity {
         listView = findViewById(R.id.lv_country_names);
         listView.setAdapter(countryNamesAdapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String countryName = countryNamesSearched.get(i);
+
+                showLoading();
+
+                CountryApi countryApi = CountryApp.getApplication().getCountryApi();
+
+                Call<List<CountryDetail>> call = countryApi.getCountriesByName(countryName, "");
+
+                call.enqueue(new Callback<List<CountryDetail>>() {
+                    @Override
+                    public void onResponse(Call<List<CountryDetail>> call, Response<List<CountryDetail>> response) {
+                        hideLoading();
+                        Log.e("Ok", response.body().toString());
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<CountryDetail>> call, Throwable t) {
+                        hideLoading();
+                        Log.e("failed", t.getMessage());
+                    }
+                });
+
+            }
+        });
 
     }
 
