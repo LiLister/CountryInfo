@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">CountryInfo</string>
     <string name="main_activity_title">Country Search</string>
+    <string name="country_name">Name: %s</string>
+    <string name="country_native_name">Native name: %s</string>
+    <string name="country_region">Region: %s</string>
+    <string name="country_capital">Capital: %s</string>
+    <string name="country_languages">Languages: %s</string>
+    <string name="country_translations">Translations: %s</string>
 
 </resources>

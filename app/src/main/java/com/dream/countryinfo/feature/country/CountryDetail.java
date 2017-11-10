@@ -18,27 +18,27 @@ public class CountryDetail {
     private String flag;
     private Map<String, String> translations;
     private String area;
-    private List<Integer> latlng;
+    private List<Double> latlng;
 
-    public int getLatitude() {
+    public double getLatitude() {
         return latlng.get(0);
     }
 
-    public int getLongitude() {
+    public double getLongitude() {
         return latlng.get(1);
     }
 
-    private String getLanguageNames() {
+    public String getLanguageNames() {
         StringBuilder sb = new StringBuilder();
         for(Map<String, String> map : languages) {
             sb.append(map.get("name"));
-            sb.append(",");
+            sb.append(", ");
         }
 
-        return sb.substring(0, sb.length() - 2);
+        return sb.substring(0, sb.length() - 3);
     }
 
-    private String getTranslationOfGerman() {
+    public String getTranslationOfGerman() {
         String result = translations.get("de");
         if (TextUtils.isEmpty(result))
             result = "N/A";
@@ -84,7 +84,7 @@ public class CountryDetail {
         this.area = area;
     }
 
-    public void setLatlng(List<Integer> latlng) {
+    public void setLatlng(List<Double> latlng) {
         this.latlng = latlng;
     }
 
@@ -116,7 +116,7 @@ public class CountryDetail {
         return area;
     }
 
-    public List<Integer> getLatlng() {
+    public List<Double> getLatlng() {
         return latlng;
     }
 }

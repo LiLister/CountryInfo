@@ -135,25 +135,9 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String countryName = countryNamesSearched.get(i);
 
-                showLoading();
+                CountryDetailActivity.startMe(MainActivity.this, countryName);
 
-                CountryApi countryApi = CountryApp.getApplication().getCountryApi();
 
-                Call<List<CountryDetail>> call = countryApi.getCountriesByName(countryName, "");
-
-                call.enqueue(new Callback<List<CountryDetail>>() {
-                    @Override
-                    public void onResponse(Call<List<CountryDetail>> call, Response<List<CountryDetail>> response) {
-                        hideLoading();
-                        Log.e("Ok", response.body().toString());
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<CountryDetail>> call, Throwable t) {
-                        hideLoading();
-                        Log.e("failed", t.getMessage());
-                    }
-                });
 
             }
         });

@@ -63,5 +63,10 @@ public class BaseActivity extends AppCompatActivity {
         pDialog.show();
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }
