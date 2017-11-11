@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.dream.countryinfo.network.CountryApi;
 import com.dream.countryinfo.network.CountryApiCreator;
+import com.mapbox.mapboxsdk.Mapbox;
 
 /**
  * Created by lixingming on 09/11/2017.
@@ -19,6 +20,8 @@ public class CountryApp extends Application {
         super.onCreate();
 
         instance = this;
+
+        Mapbox.getInstance(getApplicationContext(), getResources().getString(R.string.mapbox_sdk_token));
     }
 
     public static CountryApp getApplication() {

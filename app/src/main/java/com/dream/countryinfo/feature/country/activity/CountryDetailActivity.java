@@ -3,9 +3,7 @@ package com.dream.countryinfo.feature.country.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.webkit.WebView;
 import android.widget.TextView;
 
@@ -14,7 +12,14 @@ import com.dream.countryinfo.R;
 import com.dream.countryinfo.activity.BaseActivity;
 import com.dream.countryinfo.feature.country.CountryDetail;
 import com.dream.countryinfo.network.CountryApi;
+import com.dream.countryinfo.util.LogUtil;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.maps.MapView;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
+import java.lang.ref.SoftReference;
 import java.util.List;
 
 import retrofit2.Call;
@@ -26,6 +31,16 @@ public class CountryDetailActivity extends BaseActivity {
 
     private String countryName;
 
+    private MapView mapView;
+
+    private CountryDetail countryDetail;
+
+    private boolean mapReaday = false;
+    private boolean countryInfoReady = false;
+
+    private SoftReference<MapboxMap> refMapboxMap;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +51,60 @@ public class CountryDetailActivity extends BaseActivity {
         initView();
 
         initData();
+
+        mapView = (MapView) findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(MapboxMap mapboxMap) {
+                refMapboxMap = new SoftReference<MapboxMap>(mapboxMap);
+                mapReaday = true;
+
+                updateMap();
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mapView.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mapView.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        mapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        mapView.onStop();
+        super.onStop();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        mapView.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onLowMemory() {
+        mapView.onLowMemory();
+        super.onLowMemory();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mapView.onStart();
+        super.onDestroy();
     }
 
     private void initView() {
@@ -64,30 +133,34 @@ public class CountryDetailActivity extends BaseActivity {
             public void onResponse(Call<List<CountryDetail>> call, Response<List<CountryDetail>> response) {
                 List<CountryDetail> countryDetails = response.body();
                 if (countryDetails.size() > 0) {
-                    CountryDetail countryDetail = countryDetails.get(0);
+                    countryDetail = countryDetails.get(0);
+                    countryInfoReady = true;
 
-                    updateView(countryDetail);
+                    updateView();
+
+                    updateMap();
                 }
 
                 hideLoading();
-                Log.e("Ok", response.body().toString());
+                LogUtil.e("Ok", response.body().toString());
             }
 
             @Override
             public void onFailure(Call<List<CountryDetail>> call, Throwable t) {
                 hideLoading();
-                Log.e("failed", t.getMessage());
+                LogUtil.e("failed", t.getMessage());
+                safeToast("Failed to get country detail.");
+                finish();
             }
         });
     }
 
-    private void updateView(CountryDetail countryDetail) {
+    private void updateView() {
         WebView webView = findViewById(R.id.webView);
 
         // TODO user a HTML template to change the SVG size in webview
         webView.loadUrl(countryDetail.getFlag());
 
-        // TODO handle MapBox -- set a marker with location get from countryDetail
 
         TextView tvName = findViewById(R.id.tv_name);
         TextView tvNativeName = findViewById(R.id.tv_native_name);
@@ -106,6 +179,23 @@ public class CountryDetailActivity extends BaseActivity {
                 countryDetail.getLanguageNames()));
         tvTranslations.setText(String.format(getResources().getString(R.string.country_capital),
                 countryDetail.getTranslationOfGerman()));
+    }
+
+    private void updateMap() {
+        if (mapReaday && countryInfoReady) {
+            // set a marker with location get from countryDetail
+
+            MapboxMap mapboxMap = refMapboxMap.get();
+            if (mapboxMap != null) {
+
+                mapboxMap.addMarker(new MarkerOptions()
+                        .position(new LatLng(countryDetail.getLatitude(), countryDetail.getLongitude()))
+                        .title("Eiffel Tower")
+                );
+
+                mapboxMap.setLatLng(new LatLng(countryDetail.getLatitude(), countryDetail.getLongitude()));
+            }
+        }
     }
 
     public static void startMe(Context context, String countryName) {

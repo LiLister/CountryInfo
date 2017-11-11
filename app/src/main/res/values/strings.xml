@@ -8,4 +8,6 @@
     <string name="country_languages">Languages: %s</string>
     <string name="country_translations">Translations: %s</string>
 
+    <string name="mapbox_sdk_token">pk.eyJ1IjoibGlsaXN0ZXIiLCJhIjoiY2o4b29vcnV0MDV0dzMwdW0xOTk5cTE2aCJ9.mcZCcdmy7g71XhSD8N-ylg</string>
+
 </resources>

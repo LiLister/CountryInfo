@@ -1,9 +1,6 @@
 package com.dream.countryinfo.feature.country.activity;
 
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -13,10 +10,8 @@ import android.widget.Toast;
 import com.dream.countryinfo.CountryApp;
 import com.dream.countryinfo.R;
 import com.dream.countryinfo.activity.BaseActivity;
-import com.dream.countryinfo.feature.country.CountryDetail;
 import com.dream.countryinfo.feature.country.adapter.CountryNamesAdapter;
 import com.dream.countryinfo.network.CountryApi;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +20,6 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseActivity {
@@ -75,7 +66,7 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<List<Map<String, String>>> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, "failed to retrieve country names",
+                        Toast.makeText(MainActivity.this, "failed to retrieve country names. " + t.getMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
                 });

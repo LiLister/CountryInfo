@@ -41,4 +41,9 @@ dependencies {
     //    glide okhttp
     implementation 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar'
 
+    // MapBox SDK
+    implementation ('com.mapbox.mapboxsdk:mapbox-android-sdk:5.2.0-beta.3@aar'){
+        transitive=true
+    }
+
 }
