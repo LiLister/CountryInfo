@@ -142,13 +142,13 @@ public class CountryDetailActivity extends BaseActivity {
                 }
 
                 hideLoading();
-                LogUtil.e("Ok", response.body().toString());
+                LogUtil.e(this.getClass().getName(), response.body().toString());
             }
 
             @Override
             public void onFailure(Call<List<CountryDetail>> call, Throwable t) {
                 hideLoading();
-                LogUtil.e("failed", t.getMessage());
+                LogUtil.e(this.getClass().getName(), t.getMessage());
                 safeToast("Failed to get country detail.");
                 finish();
             }
@@ -158,9 +158,9 @@ public class CountryDetailActivity extends BaseActivity {
     private void updateView() {
         WebView webView = findViewById(R.id.webView);
 
-        // TODO user a HTML template to change the SVG size in webview
-        webView.loadUrl(countryDetail.getFlag());
-
+        //  user a HTML template to change the SVG size in webview
+//        webView.loadUrl(countryDetail.getFlag());
+        webView.loadDataWithBaseURL(null, getHtml(countryDetail.getFlag()), "text/html",  "utf-8", null);
 
         TextView tvName = findViewById(R.id.tv_name);
         TextView tvNativeName = findViewById(R.id.tv_native_name);
@@ -196,6 +196,29 @@ public class CountryDetailActivity extends BaseActivity {
                 mapboxMap.setLatLng(new LatLng(countryDetail.getLatitude(), countryDetail.getLongitude()));
             }
         }
+    }
+
+    private String getHtml(String flagUrl) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<!DOCTYPE html>");
+        sb.append("<html lang=\"en\"><head>" +
+                "  <meta charset=\"UTF-8\">\n" +
+                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n" +
+                "  <meta name=\"description\" content=\"\">\n" +
+                "  <meta name=\"HandheldFriendly\" content=\"True\">\n" +
+                "  <meta name=\"MobileOptimized\" content=\"320\">\n" +
+                "  <meta name=\"full-screen\" content=\"no\">\n" +
+                "  <meta name=\"viewport\" content=\"width=320,maximum-scale=1.3,width=device-width, initial-scale=1,user-scalable=no\">\n" +
+                "  </head>");
+        sb.append("<body>");
+        sb.append("<embed src=\"");
+        sb.append(flagUrl);
+        sb.append("\" width=\"l60\" height=\"90\" type=\"image/svg+xml\" ");
+        sb.append("pluginspage=\"http://www.adobe.com/svg/viewer/install/\" /> ");
+        sb.append("</body>");
+        sb.append("</html>");
+
+        return sb.toString();
     }
 
     public static void startMe(Context context, String countryName) {

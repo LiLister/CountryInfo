@@ -24,6 +24,6 @@ public interface CountryApi {
 
     @GET("rest/v2/all")
     Call<List<Map<String, String>>> getAllCountries(@Query("fields") String fields);
-    
+
 }
 
