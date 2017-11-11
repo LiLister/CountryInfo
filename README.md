@@ -9,3 +9,13 @@ When user click on one country name, go to
 # Screen 2
 Show some info of the country;
 
+
+# TODO list
+* Instant search when user type in search view
+* Write HTML template for flat display
+* Permission check and handling
+* Using SQLite for country detail cache
+* When click on flag or map, show a full screen activity to display the flat/map
+* Write test
+* refine NetworkManager to provide detailed network info (such as network type: Wi-Fi, mobile network)
+

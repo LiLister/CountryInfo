@@ -66,7 +66,7 @@ public class MainActivity extends BaseActivity {
 
                     @Override
                     public void onFailure(Call<List<Map<String, String>>> call, Throwable t) {
-                        Toast.makeText(MainActivity.this, "failed to retrieve country names. " + t.getMessage(),
+                        Toast.makeText(MainActivity.this, "Failed to retrieve country names. " + t.getMessage(),
                                 Toast.LENGTH_LONG).show();
                     }
                 });
@@ -75,44 +75,8 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                // TODO do instant search when text changed
 
-
-
-//                Observable<String> observable = countryApi.getAllCountries("name");
-//                observable.subscribeOn(Schedulers.io()).unsubscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//                        .subscribe(
-//                                new Subscriber<String>() {
-//                                    @Override
-//                                    public void onCompleted() {
-//                                        hideLoading();
-//                                    }
-//
-//                                    @Override
-//                                    public void onError(Throwable e) {
-//                                        hideLoading();
-//                                    }
-//
-//                                    @Override
-//                                    public void onNext(String responseStr) {
-//                                        List<Map<String, String>> countryNames = new Gson().fromJson(responseStr,
-//                                                new ArrayList<Map<String, String>>().getClass());
-//                                        List<String> names = new ArrayList<>();
-//                                        for (Map<String, String> item: countryNames) {
-//                                            names.add(item.get("name"));
-//                                        }
-//
-//                                        countryNamesAdapter.setCountryNames(names);
-//                                        countryNamesAdapter.notifyDataSetChanged();
-//                                    }
-//
-//                                    @Override
-//                                    public void onStart() {
-//                                        super.onStart();
-//                                        showLoading("");
-//                                    }
-//                                }
-//
-//                        );
 
                 return false;
             }

@@ -132,7 +132,7 @@ public class CountryDetailActivity extends BaseActivity {
             @Override
             public void onResponse(Call<List<CountryDetail>> call, Response<List<CountryDetail>> response) {
                 List<CountryDetail> countryDetails = response.body();
-                if (countryDetails.size() > 0) {
+                if (countryDetails != null && countryDetails.size() > 0) {
                     countryDetail = countryDetails.get(0);
                     countryInfoReady = true;
 
