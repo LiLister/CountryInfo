@@ -2,10 +2,11 @@ package com.dream.countryinfo.activity;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.widget.Toast;
 
 /**
@@ -14,8 +15,17 @@ import android.widget.Toast;
 
 public class BaseActivity extends AppCompatActivity {
 
-
     private ProgressDialog pDialog = null;
+
+    public boolean checkPermission(String permission) {
+        int checkResult = ContextCompat.checkSelfPermission(this, permission);
+
+        return checkResult == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public void requestPermission(String[] permissions, int requestCode) {
+        ActivityCompat.requestPermissions(this, permissions, requestCode);
+    }
 
     public boolean isActivityValid() {
         if (this.isFinishing()) {

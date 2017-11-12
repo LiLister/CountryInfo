@@ -2,7 +2,6 @@ package com.dream.countryinfo.network;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.NetworkInfo;
 
 import com.dream.countryinfo.CountryApp;

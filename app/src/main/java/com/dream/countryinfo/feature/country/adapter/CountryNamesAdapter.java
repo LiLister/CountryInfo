@@ -1,12 +1,9 @@
 package com.dream.countryinfo.feature.country.adapter;
 
-import android.database.DataSetObservable;
-import android.database.DataSetObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.dream.countryinfo.CountryApp;

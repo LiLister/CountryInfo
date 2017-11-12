@@ -2,7 +2,6 @@ package com.dream.countryinfo.feature.country.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
