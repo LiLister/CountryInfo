@@ -7,11 +7,10 @@ import android.support.v7.app.ActionBar;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-import com.dream.countryinfo.CountryApp;
 import com.dream.countryinfo.R;
 import com.dream.countryinfo.activity.BaseActivity;
 import com.dream.countryinfo.feature.country.CountryDetail;
-import com.dream.countryinfo.network.CountryApi;
+import com.dream.countryinfo.network.CountryApiHelper;
 import com.dream.countryinfo.util.LogUtil;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -21,10 +20,6 @@ import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 
 import java.lang.ref.SoftReference;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class CountryDetailActivity extends BaseActivity {
     final private static String KEY_COUNTRY_NAME = "COUNTRY_NAME";
@@ -123,36 +118,31 @@ public class CountryDetailActivity extends BaseActivity {
     private void initData() {
         showLoading();
 
-        CountryApi countryApi = CountryApp.getApplication().getCountryApi();
+        CountryApiHelper.getSingleton().getCountriesByName(countryName, "name;capital;region;" +
+                        "nativeName;languages;flag;translations;area;latlng",
+                new CountryApiHelper.MyCallback<List<CountryDetail>>() {
+                    @Override
+                    public void onResponse(List<CountryDetail> countryDetails) {
+                        if (countryDetails != null && countryDetails.size() > 0) {
+                            countryDetail = countryDetails.get(0);
+                            countryInfoReady = true;
 
-        Call<List<CountryDetail>> call = countryApi.getCountriesByName(countryName, "name;capital;region;" +
-                "nativeName;languages;flag;translations;area;latlng");
+                            updateView();
 
-        call.enqueue(new Callback<List<CountryDetail>>() {
-            @Override
-            public void onResponse(Call<List<CountryDetail>> call, Response<List<CountryDetail>> response) {
-                List<CountryDetail> countryDetails = response.body();
-                if (countryDetails != null && countryDetails.size() > 0) {
-                    countryDetail = countryDetails.get(0);
-                    countryInfoReady = true;
+                            updateMap();
+                        }
 
-                    updateView();
+                        hideLoading();
+                    }
 
-                    updateMap();
-                }
-
-                hideLoading();
-                LogUtil.e(this.getClass().getName(), response.body().toString());
-            }
-
-            @Override
-            public void onFailure(Call<List<CountryDetail>> call, Throwable t) {
-                hideLoading();
-                LogUtil.e(this.getClass().getName(), t.getMessage());
-                safeToast("Failed to get country detail.");
-                finish();
-            }
-        });
+                    @Override
+                    public void onFailure(Throwable t) {
+                        hideLoading();
+                        LogUtil.e(this.getClass().getName(), t.getMessage());
+                        safeToast("Failed to get country detail.");
+                        finish();
+                    }
+                });
     }
 
     private void updateView() {
