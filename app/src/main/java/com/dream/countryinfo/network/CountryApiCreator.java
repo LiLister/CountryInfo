@@ -20,6 +20,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CountryApiCreator {
     private Context mContext;
 
+    private OkHttpClient okHttpClient;
+
     public CountryApiCreator(Context context) {
         mContext = context;
     }
@@ -27,12 +29,14 @@ public class CountryApiCreator {
     public CountryApi createApi(String endpoint) {
         OkHttpClient.Builder newBuilder = new OkHttpClient.Builder();
 
-        OkHttpClient okHttpClient = newBuilder.readTimeout(30, TimeUnit.SECONDS)
+        okHttpClient = newBuilder.readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .cache(new Cache(mContext.getCacheDir(), 50 * 1024*1024)) // 设置缓存大小
                 .addInterceptor(new NetworkCheckInterceptor())
                 .build();
+
+
 
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient)
@@ -40,6 +44,10 @@ public class CountryApiCreator {
                 .addConverterFactory(GsonConverterFactory.create()).build();
 
         return retrofit.create(CountryApi.class);
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
     }
 
     class NetworkCheckInterceptor implements Interceptor {

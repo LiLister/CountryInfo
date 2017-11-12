@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -24,6 +25,8 @@ public class CountryApiHelper {
 
     private volatile static CountryApiHelper singleton;
 
+    private OkHttpClient okHttpClient;
+
     private CountryApiHelper (){}
 
     public static CountryApiHelper getSingleton() {
@@ -31,12 +34,20 @@ public class CountryApiHelper {
             synchronized (CountryApiHelper.class) {
                 if (singleton == null) {
                     singleton = new CountryApiHelper();
-                    singleton.countryApi = CountryApp.getApplication().getCountryApi();
+                    CountryApiCreator apiCreator = new CountryApiCreator(CountryApp.getApplication()
+                            .getApplicationContext());
+                    singleton.countryApi = apiCreator.createApi("https://restcountries.eu/");
+                    singleton.okHttpClient = apiCreator.getOkHttpClient();
+
                     singleton.listRefCall = new ArrayList<>();
                 }
             }
         }
         return singleton;
+    }
+
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
     }
 
     public void searchCountriesByName(String searchText, String fields, MyCallback<List<Map<String, String>>>
