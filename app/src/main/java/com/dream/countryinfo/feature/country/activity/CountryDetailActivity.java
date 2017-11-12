@@ -22,7 +22,7 @@ import java.lang.ref.SoftReference;
 import java.util.List;
 
 public class CountryDetailActivity extends BaseActivity {
-    final private static String KEY_COUNTRY_NAME = "COUNTRY_NAME";
+    final public static String KEY_COUNTRY_NAME = "COUNTRY_NAME";
 
     private String countryName;
 

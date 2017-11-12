@@ -32,6 +32,26 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
     implementation 'com.squareup.okhttp3:okhttp:3.9.0'
 
+    // Espresso related
+    implementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    androidTestImplementation "com.android.support:support-annotations:$rootProject.supportLibraryVersion"
+    androidTestImplementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    androidTestImplementation "com.android.support:design:$rootProject.supportLibraryVersion"
+//    androidTestCompile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
+//    androidTestCompile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.1'){
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
+    // add this for intent mocking support
+    androidTestImplementation 'com.android.support.test.espresso:espresso-intents:3.0.1'
+
+    // add this for webview testing support
+    androidTestImplementation 'com.android.support.test.espresso:espresso-web:3.0.1'
+
+    androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test:rules:1.0.1'
+
     // RxJava
 //    implementation 'com.squareup.retrofit2:adapter-rxjava:2.3.0'
 //    implementation 'io.reactivex:rxandroid:1.2.1'
