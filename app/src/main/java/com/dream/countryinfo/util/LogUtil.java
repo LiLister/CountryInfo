@@ -32,6 +32,6 @@ public class LogUtil {
     }
 
     private static boolean isDebug() {
-        return "debug".equalsIgnoreCase(BuildConfig.BUILD_TYPE);
+        return BuildConfig.DEBUG;
     }
 }

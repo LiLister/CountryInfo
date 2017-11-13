@@ -30,11 +30,10 @@ public class CountryDetailActivityTest {
     @Rule
     public ActivityTestRule<CountryDetailActivity> mActivityRule = new ActivityTestRule(CountryDetailActivity.class, true, false);
 
-    @Before
-    public void before() {
-        IdlingResource resource = OkHttp3IdlingResource.create("OkHttp", CountryApiHelper.getSingleton().getOkHttpClient());
-        IdlingRegistry.getInstance().register(resource);
-    }
+//    @Before
+//    public void before() {
+//
+//    }
 
     @Test
     public void testCountryDetail() {

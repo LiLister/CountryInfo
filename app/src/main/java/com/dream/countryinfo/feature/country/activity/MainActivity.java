@@ -1,6 +1,7 @@
 package com.dream.countryinfo.feature.country.activity;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -51,6 +52,13 @@ public class MainActivity extends BaseActivity {
             public boolean onQueryTextChange(String s) {
                 // do instant search when text changed
                 CountryApiHelper.getSingleton().cancelSearchCountryCalls();
+
+                if (TextUtils.isEmpty(s)) {
+                    countryNamesSearched.clear();
+                    countryNamesAdapter.setCountryNames(countryNamesSearched);
+                    countryNamesAdapter.notifyDataSetChanged();
+                    return false;
+                }
 
                 progressBar.setVisibility(View.VISIBLE);
 

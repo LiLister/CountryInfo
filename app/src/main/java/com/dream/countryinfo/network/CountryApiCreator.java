@@ -1,6 +1,10 @@
 package com.dream.countryinfo.network;
 
 import android.content.Context;
+import android.support.test.espresso.IdlingRegistry;
+
+import com.dream.countryinfo.BuildConfig;
+import com.jakewharton.espresso.OkHttp3IdlingResource;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +40,9 @@ public class CountryApiCreator {
                 .addInterceptor(new NetworkCheckInterceptor())
                 .build();
 
+        if (BuildConfig.DEBUG) {
+            IdlingRegistry.getInstance().register(OkHttp3IdlingResource.create("okhttp", okHttpClient));
+        }
 
 
         Retrofit retrofit = new Retrofit.Builder()
