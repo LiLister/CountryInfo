@@ -11,9 +11,6 @@ Show some info of the country;
 
 
 # TODO list
-* Try another way to show SVG in android
 * When click on flag or map, show a full screen activity to display the flat/map
-* Write test
 * refine NetworkManager to provide detailed network info (such as network type: Wi-Fi, mobile network)
-* Permission check and handling
 
