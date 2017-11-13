@@ -1,5 +1,7 @@
 package com.dream.countryinfo.network;
 
+import android.support.annotation.NonNull;
+
 import com.dream.countryinfo.CountryApp;
 import com.dream.countryinfo.feature.country.CountryDetail;
 
@@ -8,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,8 +26,6 @@ public class CountryApiHelper {
 
     private volatile static CountryApiHelper singleton;
 
-    private OkHttpClient okHttpClient;
-
     private CountryApiHelper (){}
 
     public static CountryApiHelper getSingleton() {
@@ -37,7 +36,6 @@ public class CountryApiHelper {
                     CountryApiCreator apiCreator = new CountryApiCreator(CountryApp.getApplication()
                             .getApplicationContext());
                     singleton.countryApi = apiCreator.createApi("https://restcountries.eu/");
-                    singleton.okHttpClient = apiCreator.getOkHttpClient();
 
                     singleton.listRefCall = new ArrayList<>();
                 }
@@ -46,21 +44,17 @@ public class CountryApiHelper {
         return singleton;
     }
 
-    public OkHttpClient getOkHttpClient() {
-        return okHttpClient;
-    }
-
     public void searchCountriesByName(String searchText, String fields, MyCallback<List<Map<String, String>>>
             callback) {
         Call<List<Map<String, String>>> call = countryApi.searchCountriesByName(searchText, fields);
-        call.enqueue(new DefaultCallback<List<Map<String, String>>>(callback));
+        call.enqueue(new DefaultCallback<>(callback));
 
-        listRefCall.add(new SoftReference<Call<List<Map<String, String>>>>(call));
+        listRefCall.add(new SoftReference<>(call));
     }
 
     public void getCountriesByName(String countryName, String fields, MyCallback<List<CountryDetail>> callback) {
         Call<List<CountryDetail>> call = countryApi.getCountriesByName(countryName, fields);
-        call.enqueue(new DefaultCallback<List<CountryDetail>>(callback));
+        call.enqueue(new DefaultCallback<>(callback));
     }
 
     public void cancelSearchCountryCalls() {
@@ -80,13 +74,13 @@ public class CountryApiHelper {
         }
 
         @Override
-        public void onResponse(Call<T> call, Response<T> response) {
+        public void onResponse(@NonNull Call<T> call, @NonNull Response<T> response) {
             if (!call.isCanceled())
                 callback.onResponse(response.body());
         }
 
         @Override
-        public void onFailure(Call<T> call, Throwable t) {
+        public void onFailure(@NonNull Call<T> call, @NonNull Throwable t) {
             if (!call.isCanceled())
                 callback.onFailure(t);
         }

@@ -1,6 +1,7 @@
 package com.dream.countryinfo.network;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingRegistry;
 
 import com.dream.countryinfo.BuildConfig;
@@ -24,8 +25,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class CountryApiCreator {
     private Context mContext;
 
-    private OkHttpClient okHttpClient;
-
     public CountryApiCreator(Context context) {
         mContext = context;
     }
@@ -33,7 +32,7 @@ public class CountryApiCreator {
     public CountryApi createApi(String endpoint) {
         OkHttpClient.Builder newBuilder = new OkHttpClient.Builder();
 
-        okHttpClient = newBuilder.readTimeout(30, TimeUnit.SECONDS)
+        OkHttpClient okHttpClient = newBuilder.readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .cache(new Cache(mContext.getCacheDir(), 50 * 1024*1024)) // 设置缓存大小
@@ -53,13 +52,9 @@ public class CountryApiCreator {
         return retrofit.create(CountryApi.class);
     }
 
-    public OkHttpClient getOkHttpClient() {
-        return okHttpClient;
-    }
-
     class NetworkCheckInterceptor implements Interceptor {
 
-        public Response intercept(Chain chain) throws IOException {
+        public Response intercept(@NonNull Chain chain) throws IOException {
             Request request = chain.request();
 
             if (!NetworkManager.isConnected()) {

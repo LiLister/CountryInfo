@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CountryInfo</string>
+    <string name="country_app_name">CountryInfo</string>
     <string name="main_activity_title">Country Search</string>
     <string name="country_name">Name: %s</string>
     <string name="country_native_name">Native name: %s</string>

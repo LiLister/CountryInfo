@@ -21,8 +21,6 @@ import java.util.Map;
 
 public class MainActivity extends BaseActivity {
 
-    private SearchView searchView;
-    private ListView listView;
     private ProgressBar progressBar;
     private CountryNamesAdapter countryNamesAdapter = new CountryNamesAdapter();
 
@@ -41,7 +39,7 @@ public class MainActivity extends BaseActivity {
     private void initView() {
         progressBar = findViewById(R.id.progressBar);
 
-        searchView = findViewById(R.id.searchView);
+        SearchView searchView = findViewById(R.id.searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -91,7 +89,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-        listView = findViewById(R.id.lv_country_names);
+        ListView listView = findViewById(R.id.lv_country_names);
         listView.setAdapter(countryNamesAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {

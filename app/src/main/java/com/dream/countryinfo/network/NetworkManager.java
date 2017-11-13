@@ -15,9 +15,11 @@ public class NetworkManager {
     public static boolean isConnected() {
         ConnectivityManager mConnectivityManager = (ConnectivityManager)CountryApp.getApplication().getSystemService
                 (Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-        if (mNetworkInfo != null) {
-            return mNetworkInfo.isAvailable();
+        if (mConnectivityManager != null) {
+            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
+            if (mNetworkInfo != null) {
+                return mNetworkInfo.isAvailable();
+            }
         }
 
         return false;

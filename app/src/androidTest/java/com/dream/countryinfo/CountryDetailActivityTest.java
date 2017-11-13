@@ -1,16 +1,11 @@
 package com.dream.countryinfo;
 
 import android.content.Intent;
-import android.support.test.espresso.IdlingRegistry;
-import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.dream.countryinfo.feature.country.activity.CountryDetailActivity;
-import com.dream.countryinfo.network.CountryApiHelper;
-import com.jakewharton.espresso.OkHttp3IdlingResource;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +23,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class CountryDetailActivityTest {
 
     @Rule
-    public ActivityTestRule<CountryDetailActivity> mActivityRule = new ActivityTestRule(CountryDetailActivity.class, true, false);
+    public ActivityTestRule<CountryDetailActivity> mActivityRule = new ActivityTestRule<>(CountryDetailActivity.class,
+            true, false);
 
 //    @Before
 //    public void before() {

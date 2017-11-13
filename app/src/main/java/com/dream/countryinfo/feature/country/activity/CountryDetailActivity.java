@@ -30,7 +30,7 @@ public class CountryDetailActivity extends BaseActivity {
 
     private CountryDetail countryDetail;
 
-    private boolean mapReaday = false;
+    private boolean mapReady = false;
     private boolean countryInfoReady = false;
 
     private SoftReference<MapboxMap> refMapboxMap;
@@ -47,13 +47,13 @@ public class CountryDetailActivity extends BaseActivity {
 
         initData();
 
-        mapView = (MapView) findViewById(R.id.mapView);
+        mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(MapboxMap mapboxMap) {
-                refMapboxMap = new SoftReference<MapboxMap>(mapboxMap);
-                mapReaday = true;
+                refMapboxMap = new SoftReference<>(mapboxMap);
+                mapReady = true;
 
                 updateMap();
             }
@@ -167,12 +167,12 @@ public class CountryDetailActivity extends BaseActivity {
                 countryDetail.getCapital()));
         tvLanguages.setText(String.format(getResources().getString(R.string.country_languages),
                 countryDetail.getLanguageNames()));
-        tvTranslations.setText(String.format(getResources().getString(R.string.country_capital),
+        tvTranslations.setText(String.format(getResources().getString(R.string.country_translations),
                 countryDetail.getTranslationOfGerman()));
     }
 
     private void updateMap() {
-        if (mapReaday && countryInfoReady) {
+        if (mapReady && countryInfoReady) {
             // set a marker with location get from countryDetail
 
             MapboxMap mapboxMap = refMapboxMap.get();
@@ -189,9 +189,9 @@ public class CountryDetailActivity extends BaseActivity {
     }
 
     private String getHtml(String flagUrl) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<!DOCTYPE html>");
-        sb.append("<html lang=\"en\"><head>" +
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("<!DOCTYPE html>");
+        stringBuilder.append("<html lang=\"en\"><head>" +
                 "  <meta charset=\"UTF-8\">\n" +
                 "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n" +
                 "  <meta name=\"description\" content=\"\">\n" +
@@ -200,15 +200,15 @@ public class CountryDetailActivity extends BaseActivity {
                 "  <meta name=\"full-screen\" content=\"no\">\n" +
                 "  <meta name=\"viewport\" content=\"width=320,maximum-scale=1.3,width=device-width, initial-scale=1,user-scalable=no\">\n" +
                 "  </head>");
-        sb.append("<body>");
-        sb.append("<embed src=\"");
-        sb.append(flagUrl);
-        sb.append("\" width=\"l60\" height=\"90\" type=\"image/svg+xml\" ");
-        sb.append("pluginspage=\"http://www.adobe.com/svg/viewer/install/\" /> ");
-        sb.append("</body>");
-        sb.append("</html>");
+        stringBuilder.append("<body>");
+        stringBuilder.append("<embed src=\"");
+        stringBuilder.append(flagUrl);
+        stringBuilder.append("\" width=\"l60\" height=\"90\" type=\"image/svg+xml\" ");
+        stringBuilder.append("pluginspage=\"http://www.adobe.com/svg/viewer/install/\" /> ");
+        stringBuilder.append("</body>");
+        stringBuilder.append("</html>");
 
-        return sb.toString();
+        return stringBuilder.toString();
     }
 
     public static void startMe(Context context, String countryName) {
