@@ -21,11 +21,11 @@ public class CountryDetail {
     private List<Double> latlng;
 
     public double getLatitude() {
-        return latlng.get(0);
+        return latlng.size() > 0 ? latlng.get(0) : 0;
     }
 
     public double getLongitude() {
-        return latlng.get(1);
+        return latlng.size() > 1 ? latlng.get(1) : 0;
     }
 
     public String getLanguageNames() {

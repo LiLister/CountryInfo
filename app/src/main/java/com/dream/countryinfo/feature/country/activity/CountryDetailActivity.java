@@ -2,22 +2,21 @@ package com.dream.countryinfo.feature.country.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.view.View;
-import android.webkit.WebView;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.caverock.androidsvg.SVG;
 import com.dream.countryinfo.R;
 import com.dream.countryinfo.activity.BaseActivity;
 import com.dream.countryinfo.feature.country.CountryDetail;
 import com.dream.countryinfo.network.CountryApiHelper;
+import com.dream.countryinfo.network.OkHttpHelper;
 import com.dream.countryinfo.util.LogUtil;
-import com.larvalabs.svgandroid.SVG;
-import com.larvalabs.svgandroid.SVGBuilder;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -33,6 +32,8 @@ public class CountryDetailActivity extends BaseActivity {
     private String countryName;
 
     private MapView mapView;
+
+    private  ImageView imgvFlag;
 
     private CountryDetail countryDetail;
 
@@ -152,19 +153,9 @@ public class CountryDetailActivity extends BaseActivity {
     }
 
     private void updateView() {
-//        WebView webView = findViewById(R.id.webView);
+        imgvFlag = findViewById(R.id.imgv_flag);
 
-        //  user a HTML template to change the SVG size in webview
-//        webView.loadUrl(countryDetail.getFlag());
-//        webView.loadDataWithBaseURL(null, getHtml(countryDetail.getFlag()), "text/html",  "utf-8", null);
-
-        ImageView imgvFlag = findViewById(R.id.imgv_flag);
-        SVG svg = new SVGBuilder().readFromResource(this.getResources(), R.raw.twn).build();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            imgvFlag.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        }
-        imgvFlag.setImageDrawable(svg.getDrawable());
-
+        renderSVGToImageView();
 
         TextView tvName = findViewById(R.id.tv_name);
         TextView tvNativeName = findViewById(R.id.tv_native_name);
@@ -185,6 +176,59 @@ public class CountryDetailActivity extends BaseActivity {
                 countryDetail.getTranslationOfGerman()));
     }
 
+    private void renderSVGToImageView() {
+        final SoftReference<CountryDetailActivity> refActivity = new SoftReference<>(this);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final CountryDetailActivity activity = refActivity.get();
+                if (activity != null) {
+                    String flagSVG = OkHttpHelper.getString(activity, activity.countryDetail.getFlag());
+                    if (!TextUtils.isEmpty(flagSVG)) {
+                        try {
+                            SVG svg = SVG.getFromString(flagSVG);
+
+                            // Create a canvas to draw onto
+                            if (svg.getDocumentWidth() != -1) {
+                                final Bitmap newBM = Bitmap.createBitmap((int) Math.ceil(svg.getDocumentWidth()),
+                                        (int) Math.ceil(svg.getDocumentHeight()),
+                                        Bitmap.Config.ARGB_8888);
+                                Canvas bmcanvas = new Canvas(newBM);
+
+                                // Clear background to white
+                                bmcanvas.drawRGB(255, 255, 255);
+
+                                // Render our document onto our canvas
+                                svg.renderToCanvas(bmcanvas);
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        activity.imgvFlag.setImageBitmap(newBM);
+                                    }
+                                });
+                            }
+                        } catch (Exception e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    safeToast("Failed to parse flag svg");
+                                }
+                            });
+                        }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                safeToast("Failed to download flag svg");
+                            }
+                        });
+                    }
+                }
+            }
+        }).start();
+    }
+
     private void updateMap() {
         if (mapReady && countryInfoReady) {
             // set a marker with location get from countryDetail
@@ -200,29 +244,6 @@ public class CountryDetailActivity extends BaseActivity {
                 mapboxMap.setLatLng(new LatLng(countryDetail.getLatitude(), countryDetail.getLongitude()));
             }
         }
-    }
-
-    private String getHtml(String flagUrl) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("<!DOCTYPE html>");
-        stringBuilder.append("<html lang=\"en\"><head>" +
-                "  <meta charset=\"UTF-8\">\n" +
-                "  <meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge,chrome=1\">\n" +
-                "  <meta name=\"description\" content=\"\">\n" +
-                "  <meta name=\"HandheldFriendly\" content=\"True\">\n" +
-                "  <meta name=\"MobileOptimized\" content=\"320\">\n" +
-                "  <meta name=\"full-screen\" content=\"no\">\n" +
-                "  <meta name=\"viewport\" content=\"width=320,maximum-scale=1.3,width=device-width, initial-scale=1,user-scalable=no\">\n" +
-                "  </head>");
-        stringBuilder.append("<body>");
-        stringBuilder.append("<embed src=\"");
-        stringBuilder.append(flagUrl);
-        stringBuilder.append("\" width=\"l60\" height=\"90\" type=\"image/svg+xml\" ");
-        stringBuilder.append("pluginspage=\"http://www.adobe.com/svg/viewer/install/\" /> ");
-        stringBuilder.append("</body>");
-        stringBuilder.append("</html>");
-
-        return stringBuilder.toString();
     }
 
     public static void startMe(Context context, String countryName) {
