@@ -2,9 +2,13 @@ package com.dream.countryinfo.feature.country.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
+import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dream.countryinfo.R;
@@ -12,6 +16,8 @@ import com.dream.countryinfo.activity.BaseActivity;
 import com.dream.countryinfo.feature.country.CountryDetail;
 import com.dream.countryinfo.network.CountryApiHelper;
 import com.dream.countryinfo.util.LogUtil;
+import com.larvalabs.svgandroid.SVG;
+import com.larvalabs.svgandroid.SVGBuilder;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -146,11 +152,19 @@ public class CountryDetailActivity extends BaseActivity {
     }
 
     private void updateView() {
-        WebView webView = findViewById(R.id.webView);
+//        WebView webView = findViewById(R.id.webView);
 
         //  user a HTML template to change the SVG size in webview
 //        webView.loadUrl(countryDetail.getFlag());
-        webView.loadDataWithBaseURL(null, getHtml(countryDetail.getFlag()), "text/html",  "utf-8", null);
+//        webView.loadDataWithBaseURL(null, getHtml(countryDetail.getFlag()), "text/html",  "utf-8", null);
+
+        ImageView imgvFlag = findViewById(R.id.imgv_flag);
+        SVG svg = new SVGBuilder().readFromResource(this.getResources(), R.raw.twn).build();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            imgvFlag.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        imgvFlag.setImageDrawable(svg.getDrawable());
+
 
         TextView tvName = findViewById(R.id.tv_name);
         TextView tvNativeName = findViewById(R.id.tv_native_name);

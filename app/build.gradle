@@ -74,4 +74,7 @@ dependencies {
         transitive=true
     }
 
+    // SVG-Android
+    implementation 'com.github.japgolly.android:svg-android:2.0.6'
+
 }

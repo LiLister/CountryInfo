@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     tools:context="com.dream.countryinfo.feature.country.activity.CountryDetailActivity">
 
-    <WebView
-        android:id="@+id/webView"
+    <ImageView
+        android:id="@+id/imgv_flag"
         android:layout_width="0dp"
         android:layout_height="160dp"
         android:layout_marginStart="8dp"
@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toStartOf="@+id/mapView"
         app:layout_constraintTop_toTopOf="parent">
 
-    </WebView>
+    </ImageView>
 
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
@@ -27,7 +27,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/webView"
+        app:layout_constraintStart_toEndOf="@+id/imgv_flag"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -36,7 +36,7 @@
         style="@style/CountryDetailTextItem"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/webView" />
+        app:layout_constraintTop_toBottomOf="@+id/imgv_flag" />
 
     <TextView
         android:id="@+id/tv_native_name"
