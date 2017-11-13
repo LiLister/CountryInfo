@@ -58,13 +58,7 @@ public class CountryApiCreator {
             Request request = chain.request();
 
             if (!NetworkManager.isConnected()) {
-                if ("GET".equals(request.method().toUpperCase())) {
-                    long maxStale = 60 * 60 * 24 * 7; // tolerate 1-week stale
-                    request = request.newBuilder().addHeader("Cache-Control",
-                            "public, only-if-cached, max-stale=" + maxStale).build();
-                } else {
-                    throw new IOException("No network access available.");
-                }
+                throw new IOException("No network access available.");
             }
 
             return chain.proceed(request);

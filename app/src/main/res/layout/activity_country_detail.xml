@@ -20,6 +20,17 @@
 
     </ImageView>
 
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.ProgressBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/imgv_flag"
+        app:layout_constraintBottom_toBottomOf="@+id/imgv_flag"
+        app:layout_constraintStart_toStartOf="@+id/imgv_flag"
+        app:layout_constraintEnd_toEndOf="@+id/imgv_flag"
+        android:visibility="gone"/>
+
     <com.mapbox.mapboxsdk.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="0dp"

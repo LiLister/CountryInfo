@@ -7,7 +7,9 @@ import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.caverock.androidsvg.SVG;
@@ -15,6 +17,7 @@ import com.dream.countryinfo.R;
 import com.dream.countryinfo.activity.BaseActivity;
 import com.dream.countryinfo.feature.country.CountryDetail;
 import com.dream.countryinfo.network.CountryApiHelper;
+import com.dream.countryinfo.network.NetworkManager;
 import com.dream.countryinfo.network.OkHttpHelper;
 import com.dream.countryinfo.util.LogUtil;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
@@ -34,6 +37,7 @@ public class CountryDetailActivity extends BaseActivity {
     private MapView mapView;
 
     private  ImageView imgvFlag;
+    private ProgressBar progressBar;
 
     private CountryDetail countryDetail;
 
@@ -177,6 +181,8 @@ public class CountryDetailActivity extends BaseActivity {
     }
 
     private void renderSVGToImageView() {
+        progressBar = findViewById(R.id.progressBar);
+        progressBar.setVisibility(View.VISIBLE);
         final SoftReference<CountryDetailActivity> refActivity = new SoftReference<>(this);
         new Thread(new Runnable() {
             @Override
@@ -204,6 +210,7 @@ public class CountryDetailActivity extends BaseActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
+                                        activity.progressBar.setVisibility(View.GONE);
                                         activity.imgvFlag.setImageBitmap(newBM);
                                     }
                                 });
@@ -212,6 +219,7 @@ public class CountryDetailActivity extends BaseActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    activity.progressBar.setVisibility(View.GONE);
                                     safeToast("Failed to parse flag svg");
                                 }
                             });
@@ -220,6 +228,7 @@ public class CountryDetailActivity extends BaseActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+                                activity.progressBar.setVisibility(View.GONE);
                                 safeToast("Failed to download flag svg");
                             }
                         });
