@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.PictureDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
@@ -158,6 +160,7 @@ public class CountryDetailActivity extends BaseActivity {
 
     private void updateView() {
         imgvFlag = findViewById(R.id.imgv_flag);
+        imgvFlag.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         renderSVGToImageView();
 
@@ -189,50 +192,27 @@ public class CountryDetailActivity extends BaseActivity {
             public void run() {
                 final CountryDetailActivity activity = refActivity.get();
                 if (activity != null) {
-                    String flagSVG = OkHttpHelper.getString(activity, activity.countryDetail.getFlag());
-                    if (!TextUtils.isEmpty(flagSVG)) {
-                        try {
-                            SVG svg = SVG.getFromString(flagSVG);
+                    final String flagSVG = OkHttpHelper.getString(activity, activity.countryDetail.getFlag());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!TextUtils.isEmpty(flagSVG)) {
+                                try {
+                                    SVG svg = SVG.getFromString(flagSVG);
+                                    Drawable drawable = new PictureDrawable(svg.renderToPicture());
+                                    imgvFlag.setImageDrawable(drawable);
 
-                            // Create a canvas to draw onto
-                            if (svg.getDocumentWidth() != -1) {
-                                final Bitmap newBM = Bitmap.createBitmap((int) Math.ceil(svg.getDocumentWidth()),
-                                        (int) Math.ceil(svg.getDocumentHeight()),
-                                        Bitmap.Config.ARGB_8888);
-                                Canvas bmcanvas = new Canvas(newBM);
-
-                                // Clear background to white
-                                bmcanvas.drawRGB(255, 255, 255);
-
-                                // Render our document onto our canvas
-                                svg.renderToCanvas(bmcanvas);
-
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        activity.progressBar.setVisibility(View.GONE);
-                                        activity.imgvFlag.setImageBitmap(newBM);
-                                    }
-                                });
-                            }
-                        } catch (Exception e) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
+                                    activity.progressBar.setVisibility(View.GONE);
+                                } catch (Exception e) {
                                     activity.progressBar.setVisibility(View.GONE);
                                     safeToast("Failed to parse flag svg");
                                 }
-                            });
-                        }
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                            } else {
                                 activity.progressBar.setVisibility(View.GONE);
                                 safeToast("Failed to download flag svg");
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
         }).start();
