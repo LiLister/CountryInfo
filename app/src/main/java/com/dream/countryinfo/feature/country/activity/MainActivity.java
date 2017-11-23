@@ -1,5 +1,6 @@
 package com.dream.countryinfo.feature.country.activity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -34,6 +35,11 @@ public class MainActivity extends BaseActivity {
         setTitle(R.string.main_activity_title);
 
         initView();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     private void initView() {

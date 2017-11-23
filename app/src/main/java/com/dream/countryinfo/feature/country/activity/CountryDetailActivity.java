@@ -2,6 +2,7 @@ package com.dream.countryinfo.feature.country.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -113,6 +114,11 @@ public class CountryDetailActivity extends BaseActivity {
     protected void onDestroy() {
         mapView.onStart();
         super.onDestroy();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     private void initView() {
