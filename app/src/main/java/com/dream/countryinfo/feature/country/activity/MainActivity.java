@@ -2,6 +2,8 @@ package com.dream.countryinfo.feature.country.activity;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,6 +20,10 @@ import com.dream.countryinfo.network.CountryApiHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends BaseActivity {
@@ -26,6 +32,12 @@ public class MainActivity extends BaseActivity {
     private CountryNamesAdapter countryNamesAdapter = new CountryNamesAdapter();
 
     private List<String> countryNamesSearched = new ArrayList<>();
+
+    private ScheduledExecutorService scheduledExecutor = Executors.newScheduledThreadPool(10);
+
+    private String currentSearchText;
+
+    final private static long searchDelayMills = 500L;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,49 +61,17 @@ public class MainActivity extends BaseActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return false;
+                return true;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
                 // do instant search when text changed
-                CountryApiHelper.getSingleton().cancelSearchCountryCalls();
+                currentSearchText = s;
 
-                if (TextUtils.isEmpty(s)) {
-                    countryNamesSearched.clear();
-                    countryNamesAdapter.setCountryNames(countryNamesSearched);
-                    countryNamesAdapter.notifyDataSetChanged();
-                    return false;
-                }
+                startSearch(s);
 
-                progressBar.setVisibility(View.VISIBLE);
-
-                CountryApiHelper.getSingleton().searchCountriesByName(s, "name",
-                        new CountryApiHelper.MyCallback<List<Map<String, String>>>() {
-                            @Override
-                            public void onResponse(List<Map<String, String>> responseData) {
-                                countryNamesSearched.clear();
-
-                                if (responseData != null) {
-                                    for (Map<String, String> item : responseData) {
-                                        countryNamesSearched.add(item.get("name"));
-                                    }
-                                }
-
-                                countryNamesAdapter.setCountryNames(countryNamesSearched);
-                                countryNamesAdapter.notifyDataSetChanged();
-
-                                progressBar.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onFailure(Throwable t) {
-                                progressBar.setVisibility(View.GONE);
-                                Toast.makeText(MainActivity.this, "Failed to retrieve country names. " + t.getMessage(),
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        });
-                return false;
+                return true;
             }
         });
 
@@ -108,5 +88,71 @@ public class MainActivity extends BaseActivity {
         });
     }
 
+    private void startSearch(String s) {
+        schedule(new SearchThread(s), searchDelayMills);
+    }
 
+    private ScheduledFuture<?> schedule(Runnable command, long delayTimeMills) {
+        return scheduledExecutor.schedule(command, delayTimeMills, TimeUnit.MILLISECONDS);
+    }
+
+    private class SearchThread extends Thread {
+        String newText;
+
+        public SearchThread(String newText){
+            this.newText = newText;
+        }
+
+        @Override
+        public void run() {
+            // keep only one thread to load current search text
+            if (newText != null && newText.equals(currentSearchText)) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        doSearch(newText);
+                    }
+                });
+            }
+        }
+    }
+
+    private void doSearch(String s) {
+        CountryApiHelper.getSingleton().cancelSearchCountryCalls();
+
+        if (TextUtils.isEmpty(s)) {
+            countryNamesSearched.clear();
+            countryNamesAdapter.setCountryNames(countryNamesSearched);
+            countryNamesAdapter.notifyDataSetChanged();
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        CountryApiHelper.getSingleton().searchCountriesByName(s, "name",
+                new CountryApiHelper.MyCallback<List<Map<String, String>>>() {
+                    @Override
+                    public void onResponse(List<Map<String, String>> responseData) {
+                        countryNamesSearched.clear();
+
+                        if (responseData != null) {
+                            for (Map<String, String> item : responseData) {
+                                countryNamesSearched.add(item.get("name"));
+                            }
+                        }
+
+                        countryNamesAdapter.setCountryNames(countryNamesSearched);
+                        countryNamesAdapter.notifyDataSetChanged();
+
+                        progressBar.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(MainActivity.this, "Failed to retrieve country names. " + t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
 }
