@@ -36,7 +36,7 @@ class CountryDetail {
 
     val translationOfGerman: String
         get() {
-            var result = translations!!["de"]
+            val result = translations!!["de"]
             return if (TextUtils.isEmpty(result))
                 "N/A"
             else

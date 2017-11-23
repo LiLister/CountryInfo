@@ -2,8 +2,6 @@ package com.dream.countryinfo.network
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.net.NetworkInfo
-
 import com.dream.countryinfo.CountryApp
 
 /**
@@ -14,7 +12,8 @@ object NetworkManager {
 
     val isConnected: Boolean
         get() {
-            val mConnectivityManager = CountryApp.application!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val mConnectivityManager = CountryApp.application!!.getSystemService(Context.CONNECTIVITY_SERVICE) as
+                    ConnectivityManager?
             if (mConnectivityManager != null) {
                 val mNetworkInfo = mConnectivityManager.activeNetworkInfo
                 if (mNetworkInfo != null) {

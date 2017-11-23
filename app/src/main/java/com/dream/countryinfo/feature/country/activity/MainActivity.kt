@@ -2,24 +2,15 @@ package com.dream.countryinfo.feature.country.activity
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.text.TextUtils
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ListView
-import android.widget.ProgressBar
-import android.widget.SearchView
-import android.widget.Toast
-
+import android.widget.*
 import com.dream.countryinfo.R
 import com.dream.countryinfo.activity.BaseActivity
 import com.dream.countryinfo.feature.country.adapter.CountryNamesAdapter
 import com.dream.countryinfo.network.CountryApiHelper
-
-import java.util.ArrayList
+import java.util.*
 import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
@@ -96,7 +87,7 @@ class MainActivity : BaseActivity() {
     }
 
     private fun doSearch(s: String) {
-        CountryApiHelper.getSingleton()!!.cancelSearchCountryCalls()
+        CountryApiHelper.getSingleton().cancelSearchCountryCalls()
 
         if (TextUtils.isEmpty(s)) {
             countryNamesSearched.clear()
@@ -107,15 +98,13 @@ class MainActivity : BaseActivity() {
 
         progressBar!!.visibility = View.VISIBLE
 
-        CountryApiHelper.getSingleton()!!.searchCountriesByName(s, "name",
+        CountryApiHelper.getSingleton().searchCountriesByName(s, "name",
                 object : CountryApiHelper.MyCallback<List<Map<String, String>>> {
                     override fun onResponse(responseData: List<Map<String, String>>?) {
                         countryNamesSearched.clear()
 
-                        if (responseData != null) {
-                            for (item in responseData) {
-                                countryNamesSearched.add(item["name"]!!)
-                            }
+                        responseData?.forEach {
+                            countryNamesSearched.add(it["name"]!!)
                         }
 
                         countryNamesAdapter.setCountryNames(countryNamesSearched)

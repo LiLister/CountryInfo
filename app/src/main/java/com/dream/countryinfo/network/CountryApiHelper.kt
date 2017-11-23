@@ -25,7 +25,7 @@ class CountryApiHelper private constructor() {
         val call = countryApi!!.searchCountriesByName(searchText, fields)
         call.enqueue(DefaultCallback(callback))
 
-        listRefCall!!.add(SoftReference(call))
+        listRefCall.add(SoftReference(call))
     }
 
     fun getCountriesByName(countryName: String, fields: String, callback: MyCallback<List<CountryDetail>>) {
@@ -34,12 +34,12 @@ class CountryApiHelper private constructor() {
     }
 
     fun cancelSearchCountryCalls() {
-        for (ref in listRefCall!!) {
+        for (ref in listRefCall) {
             if (ref.get() != null) {
                 (ref.get() as Call<List<Map<String, String>>>).cancel()
             }
         }
-        listRefCall!!.clear()
+        listRefCall.clear()
     }
 
     internal inner class DefaultCallback<T>(private val callback: MyCallback<T>) : Callback<T> {
@@ -76,7 +76,7 @@ class CountryApiHelper private constructor() {
                                 .getApplicationContext())
                         instance!!.countryApi = apiCreator.createApi("https://restcountries.eu/")
 
-                        instance!!.listRefCall = ArrayList()
+//                        instance!!.listRefCall = ArrayList()
                     }
                 }
             }

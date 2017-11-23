@@ -49,17 +49,17 @@ class CountryNamesAdapter : BaseAdapter() {
     }
 
     override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
-        var view = view
-        if (view == null) {
-            view = LayoutInflater.from(CountryApp.application!!.getApplicationContext()).inflate(R.layout
+        var myView = view
+        if (myView == null) {
+            myView = LayoutInflater.from(CountryApp.application!!.getApplicationContext()).inflate(R.layout
                     .item_country_name, null)
         }
 
-        val tvCountryName = view!!.findViewById<TextView>(R.id.tv_country_name)
+        val tvCountryName = myView!!.findViewById<TextView>(R.id.tv_country_name)
 
         tvCountryName.text = getItem(i).toString()
 
-        return view
+        return myView
     }
 
     override fun getItemViewType(i: Int): Int {

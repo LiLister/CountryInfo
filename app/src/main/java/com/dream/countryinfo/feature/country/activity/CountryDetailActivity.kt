@@ -3,32 +3,24 @@ package com.dream.countryinfo.feature.country.activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import android.os.Bundle
-import android.support.v7.app.ActionBar
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
-
 import com.caverock.androidsvg.SVG
 import com.dream.countryinfo.R
 import com.dream.countryinfo.activity.BaseActivity
 import com.dream.countryinfo.feature.country.CountryDetail
 import com.dream.countryinfo.network.CountryApiHelper
-import com.dream.countryinfo.network.NetworkManager
 import com.dream.countryinfo.network.OkHttpHelper
 import com.dream.countryinfo.util.LogUtil
 import com.mapbox.mapboxsdk.annotations.MarkerOptions
 import com.mapbox.mapboxsdk.geometry.LatLng
 import com.mapbox.mapboxsdk.maps.MapView
 import com.mapbox.mapboxsdk.maps.MapboxMap
-import com.mapbox.mapboxsdk.maps.OnMapReadyCallback
-
 import java.lang.ref.SoftReference
 
 class CountryDetailActivity : BaseActivity() {
@@ -123,11 +115,11 @@ class CountryDetailActivity : BaseActivity() {
     private fun initData() {
         showLoading()
 
-        CountryApiHelper.getSingleton()!!.getCountriesByName(countryName, "name;capital;region;" + "nativeName;languages;flag;translations;area;latlng",
+        CountryApiHelper.getSingleton().getCountriesByName(countryName, "name;capital;region;" + "nativeName;languages;flag;translations;area;latlng",
                 object : CountryApiHelper.MyCallback<List<CountryDetail>> {
-                    override fun onResponse(countryDetails: List<CountryDetail>?) {
-                        if (countryDetails != null && countryDetails.size > 0) {
-                            countryDetail = countryDetails[0]
+                    override fun onResponse(responseData: List<CountryDetail>?) {
+                        if (responseData != null && responseData.isNotEmpty()) {
+                            countryDetail = responseData[0]
                             countryInfoReady = true
 
                             updateView()

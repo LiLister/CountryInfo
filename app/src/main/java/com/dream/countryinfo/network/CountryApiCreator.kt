@@ -2,20 +2,16 @@ package com.dream.countryinfo.network
 
 import android.content.Context
 import android.support.test.espresso.IdlingRegistry
-
 import com.dream.countryinfo.BuildConfig
 import com.jakewharton.espresso.OkHttp3IdlingResource
-
-import java.io.IOException
-import java.util.concurrent.TimeUnit
-
 import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by lixingming on 09/11/2017.
@@ -29,7 +25,7 @@ class CountryApiCreator(private val mContext: Context) {
         val okHttpClient = newBuilder.readTimeout(30, TimeUnit.SECONDS)
                 .writeTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(10, TimeUnit.SECONDS)
-                .cache(Cache(mContext.cacheDir, (50 * 1024 * 1024).toLong())) // 设置缓存大小
+                .cache(Cache(mContext.cacheDir, (50 * 1024 * 1024).toLong())) // set the cache size
                 .addInterceptor(NetworkCheckInterceptor())
                 .build()
 
