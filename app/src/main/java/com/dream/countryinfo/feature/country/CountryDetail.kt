@@ -18,7 +18,7 @@ class CountryDetail {
     var latlng: List<Double>? = null
 
     val latitude: Double
-        get() = if (latlng!!.size > 0) latlng!![0] else 0.0
+        get() = if (latlng!!.isNotEmpty()) latlng!![0] else 0.0
 
     val longitude: Double
         get() = if (latlng!!.size > 1) latlng!![1] else 0.0

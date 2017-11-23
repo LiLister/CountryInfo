@@ -34,9 +34,9 @@ class CountryApiHelper private constructor() {
     }
 
     fun cancelSearchCountryCalls() {
-        for (ref in listRefCall) {
-            if (ref.get() != null) {
-                (ref.get() as Call<List<Map<String, String>>>).cancel()
+        listRefCall.forEach {
+            if (it.get() != null) {
+                (it.get() as Call<List<Map<String, String>>>).cancel()
             }
         }
         listRefCall.clear()
@@ -72,8 +72,7 @@ class CountryApiHelper private constructor() {
                 synchronized(CountryApiHelper::class.java) {
                     if (instance == null) {
                         instance = CountryApiHelper()
-                        val apiCreator = CountryApiCreator(CountryApp.application!!
-                                .getApplicationContext())
+                        val apiCreator = CountryApiCreator(CountryApp.application!!.applicationContext)
                         instance!!.countryApi = apiCreator.createApi("https://restcountries.eu/")
 
 //                        instance!!.listRefCall = ArrayList()

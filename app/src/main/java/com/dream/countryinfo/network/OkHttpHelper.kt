@@ -1,13 +1,10 @@
 package com.dream.countryinfo.network
 
 import android.content.Context
-
-import java.util.concurrent.TimeUnit
-
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
+import java.util.concurrent.TimeUnit
 
 /**
  * Created by lixingming on 13/11/2017.
@@ -25,12 +22,14 @@ object OkHttpHelper {
                 .build()
 
         val request = Request.Builder().url(url).build()
+        var result: String? = null
         try {
             val response = okHttpClient.newCall(request).execute()
-            return response.body()!!.string()
+            result = response.body()!!.string()
         } catch (e: Exception) {
-            return null
+
         }
 
+        return result
     }
 }

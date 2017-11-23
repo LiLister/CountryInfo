@@ -51,7 +51,7 @@ class CountryNamesAdapter : BaseAdapter() {
     override fun getView(i: Int, view: View?, viewGroup: ViewGroup): View {
         var myView = view
         if (myView == null) {
-            myView = LayoutInflater.from(CountryApp.application!!.getApplicationContext()).inflate(R.layout
+            myView = LayoutInflater.from(CountryApp.application!!.applicationContext).inflate(R.layout
                     .item_country_name, null)
         }
 
